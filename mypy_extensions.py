@@ -5,12 +5,32 @@ Example usage:
     from mypy_extensions import TypedDict
 """
 
-from typing import Any, Dict
+from typing import Any, Dict, Final, Literal
 
 import sys
 # _type_check is NOT a part of public typing API, it is used here only to mimic
 # the (convenient) behavior of types provided by typing module.
-from typing import _type_check  # type: ignore
+from typing import _type_check  # type: ignore [attr-defined]
+
+from typing_extensions import NotRequired, TypeGuard, Unpack
+
+
+MYPYC_ATTRS: Final = frozenset([
+    "native_class",
+    "allow_interpreted_subclasses",
+    "serializable",
+])
+
+MypycAttr = Literal[
+    "native_class",
+    "allow_interpreted_subclasses",
+    "serializable",
+]
+
+class MypycAttrs(TypedDict):
+    native_class: NotRequired[bool]
+    allow_interpreted_subclasses: NotRequired[bool]
+    serializable: NotRequired[bool]
 
 
 def _check_fails(cls, other):
@@ -158,7 +178,21 @@ def trait(cls):
     return cls
 
 
-def mypyc_attr(*attrs, **kwattrs):
+def _validate_mypyc_attr_key(key: str) -> TypeGuard[MypycAttr]:
+    if key not in MYPYC_ATTRS:
+        raise ValueError(
+            f"{key!r} is not a valid `mypyc_attr` key.\n"
+            "Valid keys are: {', '.join(map(repr, sorted(MYPYC_ATTRS)))}"
+        )
+
+
+def mypyc_attr(*attrs: MypycAttr, **kwattrs: Unpack[MypycAttrs]):
+    for key in attrs:
+        _validate_mypyc_attr_key(key)
+    for key, value in kwattrs.items():
+        _validate_mypyc_attr_key(key)
+        if not isinstance(value, bool):
+            raise TypeError(f"{key} value should be boolean, not {type(value).__name__}.")
     return lambda x: x
 
 
