@@ -33,6 +33,7 @@ class MypycAttrs(TypedDict):
     native_class: NotRequired[bool]
     allow_interpreted_subclasses: NotRequired[bool]
     serializable: NotRequired[bool]
+    free_list_len: NotRequired[int]
 
 
 def _check_fails(cls, other):
