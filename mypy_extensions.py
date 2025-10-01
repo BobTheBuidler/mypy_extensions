@@ -168,11 +168,13 @@ def mypyc_attr(*attrs, **kwattrs):
 
         Using positional arguments:
         
-            mypyc_attr("serializable", "allow_interpreted_subclasses")
+            @mypyc_attr("serializable", "allow_interpreted_subclasses")
+            class MyClass: ...
         
         Using keyword arguments:
         
-            mypyc_attr(serializable=True, allow_interpreted_subclasses=True)
+            @mypyc_attr(serializable=True, allow_interpreted_subclasses=True)
+            class MyClass: ...
     """
     # TODO: add some information on the available attrs so it can be viewed directly in user's IDE
     return lambda x: x
