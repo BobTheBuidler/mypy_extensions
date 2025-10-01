@@ -21,12 +21,14 @@ MYPYC_ATTRS: Final = frozenset([
     "native_class",
     "allow_interpreted_subclasses",
     "serializable",
+    "free_list_len",
 ])
 
 MypycAttr = Literal[
     "native_class",
     "allow_interpreted_subclasses",
     "serializable",
+    "free_list_len",
 ]
 
 class MypycAttrs(TypedDict):
