@@ -159,6 +159,16 @@ def trait(cls):
 
 
 def mypyc_attr(*attrs, **kwattrs):
+    """
+    Define specific attributes for the decorated object when compiled with mypyc.
+
+    This decorator can be used with args or with kwargs. The following 2 snippets are the same:
+    
+    `mypyc_attr("serializable", "allow_interpreted_subclasses")`
+    
+    `mypyc_attr(serializable=True, allow_interpreted_subclasses=True)`
+    """
+    # TODO: add some information on the available attrs so it can be viewed directly in user's IDE
     return lambda x: x
 
 
