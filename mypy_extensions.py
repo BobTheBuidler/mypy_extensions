@@ -5,7 +5,7 @@ Example usage:
     from mypy_extensions import TypedDict
 """
 
-from typing import Any, Dict, Final, Literal
+from typing import Any, Callable, Dict, Final, Literal, TypeVar
 
 import sys
 # _type_check is NOT a part of public typing API, it is used here only to mimic
@@ -14,6 +14,8 @@ from typing import _type_check  # type: ignore [attr-defined]
 
 from typing_extensions import NotRequired, TypeGuard, Unpack
 
+
+_C = TypeVar("_C", bound=Callable[..., Any])
 
 MYPYC_ATTRS: Final = frozenset([
     "native_class",
@@ -186,7 +188,7 @@ def _validate_mypyc_attr_key(key: str) -> TypeGuard[MypycAttr]:
         )
 
 
-def mypyc_attr(*attrs: MypycAttr, **kwattrs: Unpack[MypycAttrs]):
+def mypyc_attr(*attrs: MypycAttr, **kwattrs: Unpack[MypycAttrs]) -> Callable[[_C], _C]:
     for key in attrs:
         _validate_mypyc_attr_key(key)
     for key, value in kwattrs.items():
@@ -196,8 +198,7 @@ def mypyc_attr(*attrs: MypycAttr, **kwattrs: Unpack[MypycAttrs]):
     return lambda x: x
 
 
-# TODO: We may want to try to properly apply this to any type
-# variables left over...
+# TODO: We may want to try to properly apply this to any type variables left over...
 class _FlexibleAliasClsApplied:
     def __init__(self, val):
         self.val = val
