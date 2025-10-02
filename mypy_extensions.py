@@ -167,12 +167,12 @@ def mypyc_attr(*attrs, **kwattrs):
         The following 2 snippets are equivalent:
 
         Using positional arguments:
-        
+
             @mypyc_attr("serializable", "allow_interpreted_subclasses")
             class MyClass: ...
-        
+
         Using keyword arguments:
-        
+
             @mypyc_attr(serializable=True, allow_interpreted_subclasses=True)
             class MyClass: ...
     """
